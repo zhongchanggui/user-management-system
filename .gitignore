@@ -1,0 +1,40 @@
+# Build output
+target/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Logs
+*.log
+app.log
+app-err.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven
+.mvn/
+
+# Node (frontend build artifacts)
+src/main/resources/frontend/node_modules/
+src/main/resources/frontend/dist/
+
+# Uploads
+.uploads/
+
+# Claude
+.claude/
+
+# Temp files
+query
+*.bat
+t_user.txt

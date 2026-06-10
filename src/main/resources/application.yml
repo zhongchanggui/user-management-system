@@ -1,0 +1,59 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  # Tomcat 优化
+  tomcat:
+    max-connections: 100
+    accept-count: 50
+    threads:
+      max: 50
+      min-spare: 5
+
+spring:
+  # 启用懒加载（按需初始化 Bean，加速启动）
+  main:
+    lazy-initialization: true
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/user_management?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+    username: ${DB_USER:root}
+    password: ${DB_PASS:root}
+    druid:
+      # 启动时只初始化 1 个连接（加速启动，运行时按需增加）
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      max-wait: 5000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      validation-query: SELECT 1
+      validation-query-timeout: 3
+      # 销毁空闲连接
+      remove-abandoned: false
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.usermanagement.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    # 关闭 SQL 日志输出（严重影响性能）
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    # 二级缓存
+    cache-enabled: true
+    # 延迟加载
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+
+logging:
+  level:
+    # 降低 mapper 日志级别（从 debug 改为 info，减少日志输出）
+    com.example.usermanagement.mapper: info
+    # 降低 Spring 启动日志
+    root: info
+    org.springframework: warn

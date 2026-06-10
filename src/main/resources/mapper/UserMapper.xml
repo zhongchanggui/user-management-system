@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.usermanagement.mapper.UserMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.usermanagement.entity.User">
+        <id column="fid" property="fid"/>
+        <result column="floginname" property="floginname"/>
+        <result column="fpassword" property="fpassword"/>
+        <result column="fnickname" property="fnickname"/>
+        <result column="fstate" property="fstate"/>
+        <result column="fbirthday" property="fbirthday"/>
+        <result column="fphonenumber" property="fphonenumber"/>
+        <result column="femail" property="femail"/>
+        <result column="ftype" property="ftype"/>
+        <result column="fcreatedatetime" property="fcreatedatetime"/>
+        <result column="fcreateuserid" property="fcreateuserid"/>
+        <result column="fsex" property="fsex"/>
+        <result column="faddress" property="faddress"/>
+        <result column="fidcard" property="fidcard"/>
+        <result column="fentrydate" property="fentrydate"/>
+        <result column="fdeptid" property="fdeptid"/>
+        <result column="fposition" property="fposition"/>
+        <result column="fsuperiorid" property="fsuperiorid"/>
+        <result column="fcreateusername" property="fcreateusername"/>
+        <result column="fdeptname" property="fdeptname"/>
+        <result column="fsuperiorname" property="fsuperiorname"/>
+    </resultMap>
+    
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        fid, floginname, fpassword, fnickname, fstate, fbirthday, 
+        fphonenumber, femail, ftype, fcreatedatetime, fcreateuserid,
+        fsex, faddress, fidcard, fentrydate, fdeptid, fposition, fsuperiorid
+    </sql>
+    
+    <!-- 根据用户名查询用户 -->
+    <select id="selectByLoginName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_user
+        WHERE floginname = #{floginname}
+    </select>
+    
+    <!-- 根据ID查询用户 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_user
+        WHERE fid = #{fid}
+    </select>
+    
+    <!-- 新增用户 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="fid">
+        INSERT INTO t_user (
+            floginname, fpassword, fnickname, fstate, fbirthday, 
+            fphonenumber, femail, ftype, fcreatedatetime, fcreateuserid,
+            fsex, faddress, fidcard, fentrydate, fdeptid, fposition, fsuperiorid
+        ) VALUES (
+            #{floginname}, #{fpassword}, #{fnickname}, #{fstate}, #{fbirthday}, 
+            #{fphonenumber}, #{femail}, #{ftype}, #{fcreatedatetime}, #{fcreateuserid},
+            #{fsex}, #{faddress}, #{fidcard}, #{fentrydate}, #{fdeptid}, #{fposition}, #{fsuperiorid}
+        )
+    </insert>
+    
+    <!-- 更新用户 -->
+    <update id="update">
+        UPDATE t_user
+        <set>
+            <if test="fpassword != null">
+                fpassword = #{fpassword},
+            </if>
+            <if test="fnickname != null">
+                fnickname = #{fnickname},
+            </if>
+            <if test="fstate != null">
+                fstate = #{fstate},
+            </if>
+            <if test="fbirthday != null">
+                fbirthday = #{fbirthday},
+            </if>
+            <if test="fphonenumber != null">
+                fphonenumber = #{fphonenumber},
+            </if>
+            <if test="femail != null">
+                femail = #{femail},
+            </if>
+            <if test="fsex != null">
+                fsex = #{fsex},
+            </if>
+            <if test="faddress != null">
+                faddress = #{faddress},
+            </if>
+            <if test="fidcard != null">
+                fidcard = #{fidcard},
+            </if>
+            <if test="fentrydate != null">
+                fentrydate = #{fentrydate},
+            </if>
+            <if test="fdeptid != null">
+                fdeptid = #{fdeptid},
+            </if>
+            <if test="fposition != null">
+                fposition = #{fposition},
+            </if>
+            <if test="fsuperiorid != null">
+                fsuperiorid = #{fsuperiorid},
+            </if>
+        </set>
+        WHERE fid = #{fid}
+    </update>
+    
+    <!-- 删除用户 -->
+    <delete id="deleteById">
+        DELETE FROM t_user WHERE fid = #{fid}
+    </delete>
+    
+    <!-- 查询条件 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="fid != null">
+                AND u.fid = #{fid}
+            </if>
+            <if test="unfid != null">
+                AND u.fid != #{unfid}
+            </if>
+            <if test="floginname != null and floginname != ''">
+                AND u.floginname LIKE CONCAT('%', #{floginname}, '%')
+            </if>
+            <if test="fnickname != null and fnickname != ''">
+                AND u.fnickname LIKE CONCAT('%', #{fnickname}, '%')
+            </if>
+            <if test="fstate != null">
+                AND u.fstate = #{fstate}
+            </if>
+            <if test="fbirthdaybegin != null">
+                AND u.fbirthday >= #{fbirthdaybegin}
+            </if>
+            <if test="fbirthdayend != null">
+                AND u.fbirthday &lt;= #{fbirthdayend}
+            </if>
+            <if test="fphonenumber != null and fphonenumber != ''">
+                AND u.fphonenumber LIKE CONCAT('%', #{fphonenumber}, '%')
+            </if>
+            <if test="femail != null and femail != ''">
+                AND u.femail LIKE CONCAT('%', #{femail}, '%')
+            </if>
+            <if test="ftype != null">
+                AND u.ftype = #{ftype}
+            </if>
+            <if test="fcreatedatetimebegin != null">
+                AND u.fcreatedatetime >= #{fcreatedatetimebegin}
+            </if>
+            <if test="fcreatedatetimeend != null">
+                AND u.fcreatedatetime &lt;= #{fcreatedatetimeend}
+            </if>
+            <if test="fcreateuserid != null">
+                AND u.fcreateuserid = #{fcreateuserid}
+            </if>
+            <if test="fcondition != null and fcondition != ''">
+                AND (
+                    u.floginname LIKE CONCAT('%', #{fcondition}, '%')
+                    OR u.fnickname LIKE CONCAT('%', #{fcondition}, '%')
+                    OR u.fphonenumber LIKE CONCAT('%', #{fcondition}, '%')
+                    OR u.femail LIKE CONCAT('%', #{fcondition}, '%')
+                )
+            </if>
+        </where>
+    </sql>
+    
+    <!-- 查询用户列表（不分页） -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT 
+            u.*,
+            creator.fnickname as fcreateusername
+        FROM t_user u
+        LEFT JOIN t_user creator ON u.fcreateuserid = creator.fid
+        <include refid="Where_Condition"/>
+        ORDER BY u.fcreatedatetime DESC
+    </select>
+    
+    <!-- 查询用户列表（分页） -->
+    <select id="selectListByPage" resultMap="BaseResultMap">
+        SELECT 
+            u.*,
+            creator.fnickname as fcreateusername
+        FROM t_user u
+        LEFT JOIN t_user creator ON u.fcreateuserid = creator.fid
+        <include refid="Where_Condition"/>
+        ORDER BY u.fcreatedatetime DESC
+        LIMIT #{offset}, #{pagesize}
+    </select>
+    
+    <!-- 查询用户总数 -->
+    <select id="selectCount" resultType="int">
+        SELECT COUNT(*)
+        FROM t_user u
+        <include refid="Where_Condition"/>
+    </select>
+    
+    <!-- 查询所有创建人 -->
+    <select id="selectAllCreators" resultMap="BaseResultMap">
+        SELECT DISTINCT
+            u.fid,
+            u.fnickname as fnickname
+        FROM t_user u
+        INNER JOIN t_user created ON created.fcreateuserid = u.fid
+        ORDER BY u.fnickname
+    </select>
+    
+</mapper>

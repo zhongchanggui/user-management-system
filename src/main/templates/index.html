@@ -1,0 +1,206 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover"><meta name="description" content="企业级员工管理系统 - 高效管理员工信息，权限分配，智能办公"><meta name="keywords" content="员工管理系统, 用户管理, 企业办公, 权限管理, 人力资源管理"><meta name="author" content="企业数字化中心"><meta name="theme-color" content="#4f46e5"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="icon" href="/favicon.ico"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><title>员工管理系统</title><style>/* 全局重置与现代化基线 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html, body, #app {
+        height: 100%;
+        width: 100%;
+      }
+
+      body {
+        font-family: 'Inter', 'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, 'PingFang SC',
+                     'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+        background: radial-gradient(circle at 10% 20%, rgba(245, 247, 252, 1) 0%, rgba(228, 233, 245, 1) 100%);
+        background-attachment: fixed;
+        overflow-x: hidden;
+        color: #1e293b;
+        line-height: 1.5;
+        scroll-behavior: smooth;
+      }
+
+      /* 自定义滚动条 - 现代风格 */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #eef2f9;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #b9c3da;
+        border-radius: 10px;
+        transition: background 0.2s;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #8f9bb3;
+      }
+
+      /* 加载动画提示，优化白屏体验 */
+      .app-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #f5f7fe 0%, #e9eefa 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.3s ease, visibility 0.3s;
+        font-family: 'Inter', sans-serif;
+      }
+      .loading-content {
+        text-align: center;
+        animation: fadeSlideUp 0.5s ease-out;
+      }
+      .loading-logo {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(145deg, #5f7bef, #7c52b3);
+        border-radius: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 28px;
+        box-shadow: 0 20px 40px -12px rgba(94, 97, 208, 0.45);
+        animation: softBounce 1.2s infinite ease-in-out;
+      }
+      .loading-logo svg {
+        width: 44px;
+        height: 44px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+      }
+      .loading-text {
+        font-size: 1.6rem;
+        font-weight: 700;
+        background: linear-gradient(120deg, #1e293b, #6c5ce7);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        letter-spacing: -0.3px;
+      }
+      .loading-subtitle {
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: #7a7a9a;
+        font-weight: 500;
+        letter-spacing: 2px;
+      }
+      .loading-dots {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 24px;
+      }
+      .loading-dots span {
+        width: 10px;
+        height: 10px;
+        background: #6c5ce7;
+        border-radius: 50%;
+        animation: dotPulse 0.8s infinite ease-in-out;
+        opacity: 0.6;
+      }
+      .loading-dots span:nth-child(2) { animation-delay: 0.2s; background: #7c52b3; }
+      .loading-dots span:nth-child(3) { animation-delay: 0.4s; background: #a463f5; }
+
+      @keyframes dotPulse {
+        0%, 100% { transform: scale(0.6); opacity: 0.4; }
+        50% { transform: scale(1.2); opacity: 1; }
+      }
+      @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes softBounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+
+      /* 优雅隐藏加载器 */
+      .app-loading.hide {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      /* 背景装饰粒子层（动态生成） */
+      .bg-particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+      .bg-particle {
+        position: absolute;
+        background: radial-gradient(circle, rgba(108, 92, 231, 0.18) 0%, rgba(124, 82, 179, 0.04) 70%);
+        border-radius: 50%;
+        animation: floatParticle 18s infinite alternate;
+        will-change: transform;
+      }
+      @keyframes floatParticle {
+        0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+        50% { transform: translate(20px, -15px) scale(1.1); opacity: 0.5; }
+        100% { transform: translate(40px, -30px) scale(1.2); opacity: 0.6; }
+      }
+
+      /* 确保app容器有合适层级 */
+      #app {
+        position: relative;
+        z-index: 2;
+      }
+
+      /* 自适应无JavaScript提示美化 */
+      noscript {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(135deg, #fff3e0, #ffebee);
+        color: #c62828;
+        text-align: center;
+        padding: 16px;
+        font-weight: 500;
+        z-index: 10000;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        font-family: 'Inter', monospace;
+      }</style><script defer="defer" src="/js/chunk-vendors.b5619570.js"></script><script defer="defer" src="/js/app.54afd1e3.js"></script><link href="/css/chunk-vendors.10dd4e95.css" rel="stylesheet"><link href="/css/app.b5ed6b69.css" rel="stylesheet"></head><body><div id="app-loader" class="app-loading"><div class="loading-content"><div class="loading-logo"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M2 17L12 22L22 17" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M2 12L12 17L22 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><div class="loading-text">员工管理系统</div><div class="loading-subtitle">Enterprise Employee Management System</div><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top: 28px; font-size: 0.85rem; color: #7a7a9a; font-weight: 400; letter-spacing: 1px;">智能企业协作平台 · 安全加密 · 高效办公</p></div></div><div class="bg-particles" id="particles-bg"></div><div id="app"></div><noscript><strong>⚠️ 系统提示：您的浏览器未启用 JavaScript，请启用后访问员工管理系统，以获得完整体验。</strong></noscript><script>// 动态生成漂浮粒子背景
+      (function initParticles() {
+        var container = document.getElementById('particles-bg');
+        if (!container) return;
+        var particleCount = 40;
+        for (var i = 0; i < particleCount; i++) {
+          var particle = document.createElement('div');
+          particle.classList.add('bg-particle');
+          var size = Math.random() * 70 + 15;
+          particle.style.width = size + 'px';
+          particle.style.height = size + 'px';
+          particle.style.left = (Math.random() * 100) + '%';
+          particle.style.top = (Math.random() * 100) + '%';
+          particle.style.animationDuration = (Math.random() * 20 + 12) + 's';
+          particle.style.animationDelay = (Math.random() * 8) + 's';
+          particle.style.opacity = Math.random() * 0.35 + 0.1;
+          container.appendChild(particle);
+        }
+      })();
+
+      // 隐藏加载动画
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var loader = document.getElementById('app-loader');
+          if (loader && !loader.classList.contains('hide')) {
+            loader.classList.add('hide');
+            setTimeout(function() {
+              if (loader && loader.parentNode) loader.style.display = 'none';
+            }, 350);
+          }
+        }, 600);
+      });</script></body></html>
